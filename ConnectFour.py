@@ -57,7 +57,7 @@ class Game:
             for r in range(3, self.ROW_COUNT):
                 if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
                     return True
-    
+                    
     def evaluate_window(self,window, piece):
         score=0
         opp_piece = self.PLAYER_PIECE
@@ -186,6 +186,7 @@ PLAYER,PLAYER_PIECE=0,1
 AI,AI_PIECE=1,2
 game_over=False
 turn = random.randint(PLAYER,AI)
+mode=int(input('Select your difficulty :\n1. Easy\n2. Medium\n3. Hard : '))
 #game loop
 while not game_over:
     #player 1 input
@@ -198,9 +199,9 @@ while not game_over:
                 print("Player 1 Wins!!")
                 game_over=True
     #player 2 input
-    if turn == AI:
+    elif turn == AI and mode == 1:
         #change the integer value of the below to change the difficulty
-        col, minimax_score = game.minimax(board, 4, -math.inf, math.inf, True)
+        col, minimax_score = game.minimax(board, 3, -math.inf, math.inf, True)
         # below 3 = easy (too dumb to play)
         # 3 = easy (not dumb & playable)
         # 4 = medium (perfect)
@@ -210,7 +211,27 @@ while not game_over:
             row = game.get_next_open_row(board,col)
             game.drop_piece(board,row,col,AI_PIECE)
             if game.winning_move(board,AI_PIECE):
-                print("Player 2 Wins!!")
+                print("AI Wins!!\nIn Easy Mode")
+                game_over=True
+                game.print_board(board)
+                break
+    elif turn == AI and mode == 2:
+        col, minimax_score = game.minimax(board, 4, -math.inf, math.inf, True)
+        if game.is_valid_location(board,col):
+            row = game.get_next_open_row(board,col)
+            game.drop_piece(board,row,col,AI_PIECE)
+            if game.winning_move(board,AI_PIECE):
+                print("AI Wins!!\nIn Medium Mode")
+                game_over=True
+                game.print_board(board)
+                break
+    elif turn == AI and mode == 3:
+        col, minimax_score = game.minimax(board, 5, -math.inf, math.inf, True)
+        if game.is_valid_location(board,col):
+            row = game.get_next_open_row(board,col)
+            game.drop_piece(board,row,col,AI_PIECE)
+            if game.winning_move(board,AI_PIECE):
+                print("AI Wins!!\nIn Hard Mode")
                 game_over=True
                 game.print_board(board)
                 break
